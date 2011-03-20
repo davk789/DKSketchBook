@@ -1,0 +1,13 @@
+
+DKSketchBook
+
+A rough collection of SC scripts and saved livecoding documents. With the option 
+to include classses that will facilitate these practices.
+
+Directory structure:
+ - livecoding (this is the only part included in the project right now)
+ - scripts
+ - Classes
+
+This is a very informal project, and so it is subject to fundamental changes in 
+the future.
