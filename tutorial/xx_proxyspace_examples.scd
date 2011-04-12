@@ -300,7 +300,8 @@ using a synthdef as input
 // you have the responsibility for the right number of channels and output rate
 // you have to supply an 'out' argument so it can be mapped to the right
 channel.
-
+p.free
+~out.fadeTime = 0.2
 ~out.play;
 ~out = SynthDef("w", { arg out=0; Out.ar(out,SinOsc.ar([Rand(430, 600), 600], 0, 0.2)) });
 ~out = SynthDef("w", { arg out=0; Out.ar(out,SinOsc.ar([Rand(430, 600), 500], 0, 0.2)) });
@@ -313,15 +314,15 @@ SinOsc.ar([Rand(430, 800), Rand(430, 800)], 0, 0.2) 
 * EnvGen.kr(Env.asr(1,1,1), gate, doneAction:2)
 ) 
 });
-)
+);
 
+~out.group.set(\gate, 0)
 // once the SynthDef is sent, it can be assigned by name. 
 // using this method, a gate argument should be 
 // provided that releases the synth. (doneAction:2)
 // this is very efficient, as the def is on the server already.
 
-// if the synth def is in the synthdesc lib (.store or memStore) its gate is
-detected.
+// if the synth def is in the synthdesc lib (.store or memStore) its gate is detected.
 
 (
 SynthDef("staub", { arg out, gate=1; 
