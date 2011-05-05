@@ -70,6 +70,7 @@ e.clk2 = Buffer.read(s, "~/Music/SuperCollider Recordings/SC_110401_223812-norm.
 ~click.set(\rrate, 100);
 ~click.stop
 ~click2.stop
+
 p.stop
 ~click.setRates(\rate, 120);
 ~click2.setRates(\rate, 120);
@@ -155,25 +156,30 @@ Tdef(\clickPitches).stop
 
 
 ~sidtrig = {LFPulse.kr(10)}
+
 ~sidtrig = {LFPulse.kr(MouseX.kr(1, 350, 2))+100}
+
 ~sidtrig = {LFPulse.kr(LFNoise0.kr(1, 350, 350))+100}
 ~sidtrig = {Dust.kr(LFNoise0.kr(1, 350, 350)) + 100}
-
+~sidTrig = 1
+p
 p.stop
 
 ~sid.play
+~sid.stop
+~sid.index
 
 ~sid = { |gain=1,rez=1,lev=1|
 	Pan2.ar(
 		 RHPF.ar(
 			 SID6581f.ar(
-				 20, 255, 0, 0.3, ~sidtrig, 3, 200,
+				 20, 255, 0, 0.3, 1, 3, 200,
 				 0, 0, 0, 0, 0, 0, 0,
 				 0, 0, 0, 0, 0, 0, 0,
 				 0, 104, 1, 79, 3
 			 ) * gain,
-			 10,
-			 0.01
+			 100,
+			 0.9
 		 ) * lev
 	);
 }
@@ -212,7 +218,9 @@ p.stop
 	var sig = LagUD.ar(~sid.ar, lagu, lagd, pm);
 	Pan2.ar(SinOsc.ar(freq, sig, lev));
 }
+
 p.stop
+
 ~sin.play
 ~sin.stop
 ~sin3.stop
