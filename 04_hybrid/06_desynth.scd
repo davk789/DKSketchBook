@@ -20,7 +20,7 @@ s.stopRecording
 
 p = ProxySpace(s.boot);
 p.know=true;
-
+p.clock = TempoClock.default;
 
 fork{
 	~wtBuffers = DKBufferUtils.prepareOddPowerWavetables(6);
@@ -38,6 +38,10 @@ p.sv = { |freq=200,buf=0,lev=0.2, lfreq1=10, interval=1.5|
 }
 
 p.sv.set(\buf, ~wtBufnum[0])
+
+
+~scale = [1/1, 9/8, 5/4, 4/3, 3/2, 9/8 + 4/3, 7/4];
+
 
 Tdef(\melo, {
 	var intervals = Pseq(
@@ -143,7 +147,7 @@ p.s1.stop;
 
 ///// seq
 
-~dur = 1.2;
+~dur = 0.11;
 
 Task{
 	25.do{ |ind|
@@ -156,7 +160,7 @@ Task{
 
 Tdef(\fftea, {
 	var freq1, freq2, fchoice;
-	var freqs = Array.series(19, 36, ).midicps;
+	var freqs = Array.series(36, 36,2.1).midicps;
 	loop{
 		freq1 = freqs.choose;
 		freq2 = freqs.choose;
@@ -166,14 +170,14 @@ Tdef(\fftea, {
 			[
 				"dur", ~dur.rand,
 				"freq1", freq1,
-				"freq2", 0.7.coin.if({freq1 - freq2}, {freq1 + freq2}),
+				"freq2", 0.2.coin.if({freq1 - freq2}, {freq1 + freq2}),
 				"lev", exprand(0.0001, 0.01),
 				"pan", 2.0.rand - 1
 			]
 		);
-		exprand(0.0005, 0.001).wait
+		exprand(0.0002, 0.001).wait
 	}
-})
+});
 
 Tdef(\fftea).play
 Tdef(\fftea).stop

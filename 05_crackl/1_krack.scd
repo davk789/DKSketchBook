@@ -21,6 +21,7 @@ p.krak = { |tempo=1|
 	var sig = env * Crackle.ar();
 	Pan2.ar(sig * p.ar(\mod));
 }
+p.krak.stop
 
 Routine{
 	32.do{ |ind|
@@ -33,6 +34,7 @@ Routine{
 	}
 }.play
 
+p
 
 p.krak.setRates(\tempo, 10)
 p.krak.set(\tempo, 1)
@@ -47,6 +49,7 @@ p.krak.play(\ar, 2)
 p.krak.stop
 
 p.krak.quant =  nil
+p.mod.stop
 
 p.mod = {
 	SinOsc.ar(
@@ -62,6 +65,8 @@ p.mod = {
 p.wh = { |start=0, trig=0|
 	PlayBuf.ar(2, ~whis.bufnum, trigger:trig, startPos:start, loop:1)
 }
+
+p.wh.play
 
 p.wh.set(\trig, 0);
 p.wh.set(\start, ~whis.numFrames.rand); p.wh.set(\trig, 1);
@@ -84,3 +89,4 @@ Tdef(\skip).stop
 p.wh.play
 
 
+p.stop
