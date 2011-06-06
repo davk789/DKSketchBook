@@ -3,7 +3,6 @@
 */
 
 
-
 s.boot
 
 p = ProxySpace(s.boot);
@@ -25,7 +24,7 @@ p.krak.stop
 
 Routine{
 	32.do{ |ind|
-		p.krak[ind] = { |tempo=1, lev=1|
+		p.krak[ind] = { |tempo=1, lev=0.5|
 			var env = LagUD.kr(Impulse.kr(tempo), 0.01, 2);
 			var sig = env * Crackle.ar();
 			Pan2.ar(sig * p.ar(\mod), 2.0.rand - 1, lev);
@@ -34,6 +33,8 @@ Routine{
 	}
 }.play
 
+
+p.krak.play
 p
 
 p.krak.setRates(\tempo, 10)

@@ -23,25 +23,27 @@ DKBufferUtils {
 		
 	}
 	
-	*loadIRBuffer { |filePath, fftsize=2048|
+	*loadIRBuffer { |filePath, fftsize=2048, server|
 		// prepare a buffer for use with the PartConv UGen -- for reverb from
 		// impulse response, but can also be used for convolution
 
-		var srcBuf, irBuf, bufSize;
+		var srcBuf, irBuf, bufSize, s;
+
+		s = server ? Server.default;
 
 		this.checkConditions(thisMethod);
 		
 		// these functions must be called from a fork, the function itself
 		// can not do this
 		//		fork{
-		srcBuf = Buffer.read(Server.default, filePath);
+		srcBuf = Buffer.read(s, filePath);
 		
-		Server.default.sync; // wait until finished loading?
+		s.sync; // wait until finished loading?
 		
 		bufSize = PartConv.calcBufSize(fftsize, srcBuf);
-		irBuf = Buffer.alloc(Server.default, bufSize, 1);
+		irBuf = Buffer.alloc(s, bufSize, 1);
 		irBuf.preparePartConv(srcBuf, fftsize);
-		Server.default.sync;
+		s.sync;
 		//srcBuf.plot;
 		//irBuf.plot;
 		srcBuf.free;

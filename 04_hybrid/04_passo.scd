@@ -54,7 +54,7 @@ p.vosc_l = { |buf=0, freq=100, pan=0, lev=0.1|
 	var lbuf = buf.max(~vBufs.first.bufnum).min(~vBufs.last.bufnum - 0.1);
 	var sig = VOsc.ar(lbuf, freq, 0, lev);
 	Pan2.ar(sig, pan)
-}
+};
 
 p.vosc_r = { |buf=0, freq=100, pan=0, lev=0.1|
 	// i know there is a function that puts these calls together but I can't remember
@@ -64,7 +64,24 @@ p.vosc_r = { |buf=0, freq=100, pan=0, lev=0.1|
 	Pan2.ar(sig, pan)
 }
 
+p.vosc_l.play
+p.vosc_l.stop
+p.vosc_r.stop
+p.vosc_r.set(\lev, 0.6)
+p.vosc_l.set(\lev, 0.6)
 
+
+Tdef(\frqs, {
+	loop{
+		p.vosc_l.set(\freq, [100, 110, 120].choose);
+		0.1.rand;
+		p.vosc_r.set(\freq, [100, 110, 120].choose);
+		1.wait
+	}
+})
+
+
+Tdef(\frqs).play
 // vosc fucken with params
 // set slow rates here
 

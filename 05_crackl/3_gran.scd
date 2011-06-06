@@ -25,42 +25,54 @@ p.rv[0] = { |lev=0.3|
 	in = In.ar(0);
 	sig = PartConv.ar(in, ~fftsize, ~rvL.bufnum);
 	Pan2.ar(sig, -1, lev)
-}
+};
 
 p.rv[1] = { |lev=0.3|
 	var in, sig;
-	in = In.ar(0);
+	in = In.ar(1);
 	sig = PartConv.ar(in, ~fftsize, ~rvR.bufnum);
 	Pan2.ar(sig, 1, lev)
-}
+};
 
 p.rv.setRates(\lev, 5);
-p.rv.set(\lev, 0.55)
+p.rv.set(\lev, 0.0825)
 
 p.rv.play
+p.rv.stop
 p.rv.clear
 // ** bassline
 p.bass = \s_bass;
 
-~root = 80;
+~root = 160;
 ~dur = 0.6;
+~notes = Pseq([
+	[~root * 1/1, ~dur * 1],
+	[~root * 1/1, ~dur * 1],
+	//	[~root * 1/1, ~dur * 1],
+	[~root * 1/1, ~dur * 1],
+	[~root * (4/3), ~dur * 1],
+	[~root * (6/5), ~dur * 1],
+	[~root * (7/8), ~dur * 1],
+	[~root * 1/1, ~dur * 1],
+], inf).asStream;
+
 ~notes = Pseq(
 	[
-		//				[~root * (2/1),   ~dur * 1],
+						[~root * (2/1),   ~dur * 1],
 		[~root * (2/1),   ~dur * 1],
 		[~root * (2/1),   ~dur * 1],
 		[~root * (2/1),   ~dur * 1],
-		//[~root * (2/1),   ~dur * 1],
 		[~root * (2/1),   ~dur * 1],
 		[~root * (2/1),   ~dur * 1],
-		/*[~root * (2/1),   ~dur * 1],
+		[~root * (2/1),   ~dur * 1],
+		[~root * (2/1),   ~dur * 1],
 		[~root * (1/1),   ~dur * 1],
 		[~root * (7/8),   ~dur * 1],
 		[~root * (15/7),  ~dur * 1],
 		//	[~root * (15/8),   ~dur * 1],
 		[~root * (1/1),   ~dur * 1],
 		[~root * (14/11), ~dur * 0.2],
-		*/[~root * (3/2),   ~dur * 1],
+		[~root * (3/2),   ~dur * 1],
 	], inf).asStream;
 
 ~notes = Pseq(
@@ -68,7 +80,7 @@ p.bass = \s_bass;
 		[~root * (1/1),   ~dur * 1],
 	], inf).asStream;
 
-		p.bass.spawn([\freq, 60, \dur, 15, \lfreq, 45.rand]);
+		p.bass.spawn([\freq, 60, \dur, 15, \lfreq, 5.rand]);
 
 Tdef(\ba, {
 	loop{
@@ -84,10 +96,9 @@ Tdef(\ba).stop
 
 Tdef(\bassline, { arg root=100;
 	var dur, notes;
-	notes = ~notes.copy;
 	loop{
-		dur = notes.next[1];
-		p.bass.spawn([\freq, notes.next[0], \dur, dur, \lfreq, 45.rand]);
+		dur = ~notes.next[1];
+		p.bass.spawn([\freq, ~notes.next[0], \dur, dur, \lfreq, 45]);
 		dur.wait;
 	}
 });
@@ -113,7 +124,7 @@ p.clock.tempo = 0.125;
 // bassline synth
 SynthDef("s_bass", 
 	{ arg freq=220, pan=0, dur=1,
-		  lfreq=10;
+		  lfreq=10, lev=0.4;
 		var sig, env;
 		env = EnvGen.ar(
 			Env.new(
@@ -126,6 +137,6 @@ SynthDef("s_bass",
 			freq, 
 			SinOsc.ar(freq * 1.7 * env + SinOsc.ar(lfreq, 0, 100), 0, 1),
 			env);
-		Out.ar(0, Pan2.ar(sig, pan))
+		Out.ar(0, Pan2.ar(sig, pan, lev))
 	}
 ).load(s);
