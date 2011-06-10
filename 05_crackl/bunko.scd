@@ -9,13 +9,12 @@ q.know = true;
 q.clock = TempoClock();
 
 Server.named['q_aux'].makeWindow;
+
 // main server
 
 p = ProxySpace(s.boot);
 p.know = true;
 p.clock = TempoClock.default;
-
-
 
 SynthDef(\drun, 
 	{arg lev=1, pan=0;
